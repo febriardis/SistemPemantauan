@@ -12,44 +12,239 @@ class MonitoringController extends Controller
     }
 
     public function create(Request $req){
-        $nTemp = [];
+        $nTemp       = [];
+        $nPH         = [];
+        $nTurbidity  = [];
+
         $temperature = $req->temperature;
         $ph          = $req->ph;
         $turbidity   = $req->turbidity;
 
-        //fuzzy
-        //Fungsi Keanggotaan Dingin
-        // if($temperature <= 26){
-        //     $nTemp = 1;
-        // }
-        // elseif($temperature > 26 || $temperature < 28){
-        //     $nTemp = (28 - $temperature)/2;
-        // }
-        // elseif($temperature >= 28){
-        //     $nTemp = 0;
-        // }
+    // =============== Fuzzy Logic =================
+    // ---------------- variabel suhu ------------------
+        // fungsi keanggotaan suhu dingin
+        if($temperature < 26){
+            $nTemp[0] = 1;
+        }
+        elseif($temperature >= 26 && $temperature <= 28){
+            $nTemp[0] = (28 - $temperature)/2;
+        }
+        elseif($temperature > 28){
+            $nTemp[0] = 0;
+        }
 
-        //fungsi keanggotaan normal
-        // if($temperature >= 30 || $temperature <= 26){
-        //     $nTemp = 0;
-        // }elseif($temperature > 26 || $temperature < 28){
-        //     $nTemp = ()
-        // }
+        // fungsi keanggotaan suhu normal
+        if($temperature > 30 || $temperature < 26)
+        {
+            $nTemp[1] = 0;
+        }
+        elseif($temperature >= 26 && $temperature <= 28)
+        {
+            $nTemp[1] = ($temperature - 26) / 2;
+        }
+        elseif($temperature > 28 && $temperature <= 30){
+            $nTemp[1] = (30 - $temperature) / 2;
+        }
 
+        //fungsi keanggotaaan suhu panas
+        if($temperature <= 28)
+        {
+            $nTemp[2] = 0;
+        }elseif($temperature > 28 && $temperature <= 30)
+        {
+            $nTemp[2] = ($temperature-28)/2;
+        }
+        elseif ($temperature > 30) 
+        {
+            $nTemp[2] = 1;
+        }
 
-        //tsukamoto
+    //------------------ Variabel pH -----------------
+        //fungsi keanggotaan ph rendah
+        if($ph < 6.5)
+        {
+            $nPH[0] = 1;
+        }
+        elseif ($ph >= 6.5 && $ph <= 6.8) {
+            $nPH[0] = (6.8 - $ph) / 0.3;
+        }
+        elseif ($ph > 6.8) {
+            $nPH[0] = 0;
+        }
+        //fungsi keanggotaan ph normal
+        if($ph > 7 || $ph < 6.5){
+            $nPH[1] = 0;
+        }
+        elseif($ph >= 6.5 && $ph <= 6.8){
+            $nPH[1] = ($ph - 6.5) / 0.3;
+        }
+        elseif($ph > 6.8 && $ph <= 7){
+            $nPH[1] = (7 - $ph) / 0.2;
+        }
 
-        $this->monitoring()->create([
-            'temperature'=> $temperature,
-            'ph'         => $ph,
-            'turbidity'  => $turbidity,
-            'status'     => 'coba'
-        ]);
+        //fungsi keanggotaan ph tinggi
+        if($ph <= 6.8)
+        {
+            $nPH[2]=0;
+        }
+        elseif ($ph>6.8 && $ph<7) 
+        {
+            $nPH[2]=($ph-6.8)/0.3;
+        }
+        elseif ($ph>=7){ 
+            $nPH[2]=1;
+        }
+    
+    //------------------ Variabel Kekeruhan -----------------
+        //fungsi keanggotaan kekeruhan normal
+        if($turbidity > 25){
+            $nTurbidity[0] = 0;
+        }
+        elseif ($turbidity > 0 && $turbidity <= 25) {
+            $nTurbidity[0] = (25 - $turbidity) / 25;
+        }
+        // else{
+        elseif ($turbidity == 0) {
+            $nTurbidity[0] = 1;
+        }
+
+    //fungsi keanggotaan kekeruhan tinggi
+        if($turbidity == 0){
+            $nTurbidity[1] = 0;
+        }
+        elseif ($turbidity > 0 && $turbidity <= 25) {
+            $nTurbidity[1] = ($turbidity - 0) / 25;
+        }
+        // else{
+        elseif ($turbidity >= 25) {
+            $nTurbidity[1] = 1;
+        }
+
+    //rule base
+    // rendah atau tinggi bernilai == 1
+        if($nTemp[0]==1 && $nPH[0]==1 && $nTurbidity[0]!=0){
+            $st    = "air tidak layak, suhu dan ph rendah";
+            $aPred = min($nTemp[0], $nPH[0], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred);   
+        }//[R1]
+        elseif ($nTemp[0]==1 && $nPH[1]!=0 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, suhu rendah";        
+            $aPred = min($nTemp[0], $nPH[1], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred);   
+        }//[R2]
+        elseif ($nTemp[0]==1 && $nPH[2]==1 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, suhu rendah, dan ph tinggi";   
+            $aPred = min($nTemp[0], $nPH[2], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred);          
+        }//[R3]
+        elseif ($nTemp[0]==1 && $nPH[0]==1 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, suhu dan ph rendah, serta kekeruhan tinggi"; 
+            $aPred = min($nTemp[0], $nPH[0], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred);           
+        }//[R4]
+        elseif ($nTemp[0]==1 && $nPH[1]!=0 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, suhu rendah dan kekeruhan tinggi";   
+            $aPred = min($nTemp[0], $nPH[1], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred);        
+        }//[R5]
+        elseif ($nTemp[0]==1 && $nPH[2]==1 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, suhu rendah, ph dan kekeruhan tinggi";  
+            $aPred = min($nTemp[0], $nPH[2], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred);          
+        }//[R6]
+        elseif ($nTemp[1]!=0 && $nPH[0]==1 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, ph rendah";   
+            $aPred = min($nTemp[1], $nPH[0], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred);      
+        }//[R7]
+        elseif ($nTemp[1]!=0 && $nPH[1]!=0 && $nTurbidity[0]!=0) {
+            $st    = "air masih layak";  
+            $aPred = min($nTemp[1], $nPH[1], $nTurbidity[0]);
+            $z     = abs(1 - ($aPred*50)); 
+        }//[R8]
+        elseif ($nTemp[1]!=0 && $nPH[2]==1 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, ph tinggi";  
+            $aPred = min($nTemp[1], $nPH[2], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred); 
+        }//[R9]
+        elseif ($nTemp[1]!=0 && $nPH[0]==1 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, ph rendah dan kekeruhan tinggi";  
+            $aPred = min($nTemp[1], $nPH[0], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred); 
+        }//[R10]
+        elseif ($nTemp[1]!=0 && $nPH[1]!=0 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, kekeruhan tinggi";  
+            $aPred = min($nTemp[1], $nPH[1], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred); 
+        }//[R11]
+        elseif ($nTemp[1]!=0 && $nPH[2]==1 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, ph dan kekeruhan tinggi";  
+            $aPred = min($nTemp[1], $nPH[2], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred); 
+        }//[R12]
+        elseif ($nTemp[2]==1 && $nPH[0]==1 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, suhu tinggi dan ph rendah";  
+            $aPred = min($nTemp[2], $nPH[0], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred); 
+        }//[R13]
+        elseif ($nTemp[2]==1 && $nPH[1]!=0 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, suhu tinggi";  
+            $aPred = min($nTemp[2], $nPH[1], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred); 
+        }//[R14]
+        elseif ($nTemp[2]==1 && $nPH[2]==1 && $nTurbidity[0]!=0) {
+            $st    = "air tidak layak, suhu dan ph tinggi";  
+            $aPred = min($nTemp[2], $nPH[2], $nTurbidity[0]);
+            $z     = 100 - (50*$aPred); 
+        }//[R15]
+        elseif ($nTemp[2]==1 && $nPH[0]==1 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, ph rendah, serta suhu dan kekeruhan tinggi";  
+            $aPred = min($nTemp[2], $nPH[0], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred); 
+        }//[R16]
+        elseif ($nTemp[2]==1 && $nPH[1]!=0 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, suhu dan kekeruhan tinggi";  
+            $aPred = min($nTemp[2], $nPH[1], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred); 
+        }//[R17]
+        elseif ($nTemp[2]==1 && $nPH[2]==1 && $nTurbidity[1]==1) {
+            $st    = "air tidak layak, suhu, ph, dan kekeruhan tinggi";  
+            $aPred = min($nTemp[2], $nPH[2], $nTurbidity[1]);
+            $z     = 100 - (50*$aPred); 
+        }//[R17]
+
+        // defuzifikasi
+        $zT = ($aPred*$z)/$aPred;
+
+        // keterangan
+        if($zT>=0 && $zT<50){
+            $ket = "LAYAK !!";
+        }elseif($zT >= 50){
+            $ket = "TIDAK LAYAK !!";
+        }
 
         return response()->json([
-            'status' => true,
-            'message' => 'Data berhasil disimpan'
+            // 'aPred' => $aPred,
+            // 'Z' => $z,
+            'nilai z' => $zT,
+            'status' => $ket,
+            'keterangan' => $st,
+            // 'fuzzy Temp' => $nTemp,
+            // 'fuzzy pH' => $nPH,
+            // 'fuzzy Turb'=> $nTurbidity,
         ]);
+
+        // $this->monitoring()->create([
+        //     'temperature'=> $temperature,
+        //     'ph'         => $ph,
+        //     'turbidity'  => $turbidity,
+        //     'status'     => 'coba'
+        // ]);
+
+        // return response()->json([
+        //     'status' => true,
+        //     'message' => 'Data berhasil disimpan'
+        // ]);
     }
 
     public function showData(){
@@ -98,11 +293,14 @@ class MonitoringController extends Controller
    
 //   void loop() {
 //     if(WiFi.status()== WL_CONNECTED){   //Check WiFi connection status
-//       String postData, temperature, ph, turbidity;
+//       String postData; 
+        // float temperature; 
+        // float ph; 
+        // int turbidity;
       
 //       HTTPClient http;    //Declare object of class HTTPClient
 //       //data
-//       temperature = "20";
+//       temperature = String(20);
 //       ph = "21";
 //       turbidity = "22";
       
