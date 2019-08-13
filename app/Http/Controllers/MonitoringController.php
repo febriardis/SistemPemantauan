@@ -11,7 +11,7 @@ class MonitoringController extends Controller
         return new Monitoring;
     }
 
-    public function create(Request $req){
+    public function createManual(Request $req){
         $nTemp       = [];
         $nPH         = [];
         $nTurbidity  = [];
@@ -104,12 +104,12 @@ class MonitoringController extends Controller
             $nTurbidity[0] = (25 - $turbidity) / 25;
         }
         // else{
-        elseif ($turbidity == 0) {
+        elseif ($turbidity <= 0) {
             $nTurbidity[0] = 1;
         }
 
     //fungsi keanggotaan kekeruhan tinggi
-        if($turbidity == 0){
+        if($turbidity <= 0){
             $nTurbidity[1] = 0;
         }
         elseif ($turbidity > 0 && $turbidity <= 25) {
@@ -123,128 +123,145 @@ class MonitoringController extends Controller
     //rule base
     // rendah atau tinggi bernilai == 1
         if($nTemp[0]==1 && $nPH[0]==1 && $nTurbidity[0]!=0){
-            $st    = "air tidak layak, suhu dan ph rendah";
+            $ket   = "suhu dan ph rendah";
             $aPred = min($nTemp[0], $nPH[0], $nTurbidity[0]);
             $z     = 100 - (50*$aPred);   
         }//[R1]
         elseif ($nTemp[0]==1 && $nPH[1]!=0 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, suhu rendah";        
+            $ket   = "suhu rendah";        
             $aPred = min($nTemp[0], $nPH[1], $nTurbidity[0]);
             $z     = 100 - (50*$aPred);   
         }//[R2]
         elseif ($nTemp[0]==1 && $nPH[2]==1 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, suhu rendah, dan ph tinggi";   
+            $ket   = "suhu rendah, dan ph tinggi";   
             $aPred = min($nTemp[0], $nPH[2], $nTurbidity[0]);
             $z     = 100 - (50*$aPred);          
         }//[R3]
         elseif ($nTemp[0]==1 && $nPH[0]==1 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, suhu dan ph rendah, serta kekeruhan tinggi"; 
+            $ket   = "suhu dan ph rendah, serta kekeruhan tinggi"; 
             $aPred = min($nTemp[0], $nPH[0], $nTurbidity[1]);
             $z     = 100 - (50*$aPred);           
         }//[R4]
         elseif ($nTemp[0]==1 && $nPH[1]!=0 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, suhu rendah dan kekeruhan tinggi";   
+            $ket   = "suhu rendah dan kekeruhan tinggi";   
             $aPred = min($nTemp[0], $nPH[1], $nTurbidity[1]);
             $z     = 100 - (50*$aPred);        
         }//[R5]
         elseif ($nTemp[0]==1 && $nPH[2]==1 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, suhu rendah, ph dan kekeruhan tinggi";  
+            $ket   = "suhu rendah, ph dan kekeruhan tinggi";  
             $aPred = min($nTemp[0], $nPH[2], $nTurbidity[1]);
             $z     = 100 - (50*$aPred);          
         }//[R6]
         elseif ($nTemp[1]!=0 && $nPH[0]==1 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, ph rendah";   
+            $ket   = "ph rendah";   
             $aPred = min($nTemp[1], $nPH[0], $nTurbidity[0]);
             $z     = 100 - (50*$aPred);      
         }//[R7]
         elseif ($nTemp[1]!=0 && $nPH[1]!=0 && $nTurbidity[0]!=0) {
-            $st    = "air masih layak";  
+            $ket   = "nilai parameter normal";  
             $aPred = min($nTemp[1], $nPH[1], $nTurbidity[0]);
             $z     = abs(1 - ($aPred*50)); 
         }//[R8]
         elseif ($nTemp[1]!=0 && $nPH[2]==1 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, ph tinggi";  
+            $ket   = "ph tinggi";  
             $aPred = min($nTemp[1], $nPH[2], $nTurbidity[0]);
             $z     = 100 - (50*$aPred); 
         }//[R9]
         elseif ($nTemp[1]!=0 && $nPH[0]==1 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, ph rendah dan kekeruhan tinggi";  
+            $ket   = "ph rendah dan kekeruhan tinggi";  
             $aPred = min($nTemp[1], $nPH[0], $nTurbidity[1]);
             $z     = 100 - (50*$aPred); 
         }//[R10]
         elseif ($nTemp[1]!=0 && $nPH[1]!=0 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, kekeruhan tinggi";  
+            $ket   = "kekeruhan tinggi";  
             $aPred = min($nTemp[1], $nPH[1], $nTurbidity[1]);
             $z     = 100 - (50*$aPred); 
         }//[R11]
         elseif ($nTemp[1]!=0 && $nPH[2]==1 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, ph dan kekeruhan tinggi";  
+            $ket   = "ph dan kekeruhan tinggi";  
             $aPred = min($nTemp[1], $nPH[2], $nTurbidity[1]);
             $z     = 100 - (50*$aPred); 
         }//[R12]
         elseif ($nTemp[2]==1 && $nPH[0]==1 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, suhu tinggi dan ph rendah";  
+            $ket   = "suhu tinggi dan ph rendah";  
             $aPred = min($nTemp[2], $nPH[0], $nTurbidity[0]);
             $z     = 100 - (50*$aPred); 
         }//[R13]
         elseif ($nTemp[2]==1 && $nPH[1]!=0 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, suhu tinggi";  
+            $ket   = "suhu tinggi";  
             $aPred = min($nTemp[2], $nPH[1], $nTurbidity[0]);
             $z     = 100 - (50*$aPred); 
         }//[R14]
         elseif ($nTemp[2]==1 && $nPH[2]==1 && $nTurbidity[0]!=0) {
-            $st    = "air tidak layak, suhu dan ph tinggi";  
+            $ket   = "suhu dan ph tinggi";  
             $aPred = min($nTemp[2], $nPH[2], $nTurbidity[0]);
             $z     = 100 - (50*$aPred); 
         }//[R15]
         elseif ($nTemp[2]==1 && $nPH[0]==1 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, ph rendah, serta suhu dan kekeruhan tinggi";  
+            $ket   = "ph rendah, serta suhu dan kekeruhan tinggi";  
             $aPred = min($nTemp[2], $nPH[0], $nTurbidity[1]);
             $z     = 100 - (50*$aPred); 
         }//[R16]
         elseif ($nTemp[2]==1 && $nPH[1]!=0 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, suhu dan kekeruhan tinggi";  
+            $ket   = "suhu dan kekeruhan tinggi";  
             $aPred = min($nTemp[2], $nPH[1], $nTurbidity[1]);
             $z     = 100 - (50*$aPred); 
         }//[R17]
         elseif ($nTemp[2]==1 && $nPH[2]==1 && $nTurbidity[1]==1) {
-            $st    = "air tidak layak, suhu, ph, dan kekeruhan tinggi";  
+            $ket   = "suhu, ph, dan kekeruhan tinggi";  
             $aPred = min($nTemp[2], $nPH[2], $nTurbidity[1]);
             $z     = 100 - (50*$aPred); 
-        }//[R17]
+        }//[R18]
 
         // defuzifikasi
         $zT = ($aPred*$z)/$aPred;
 
         // keterangan
         if($zT>=0 && $zT<50){
-            $ket = "LAYAK !!";
+            $status = "air masih layak!!";
         }elseif($zT >= 50){
-            $ket = "TIDAK LAYAK !!";
+            $status = "air tidak layak !!";
         }
 
-        return response()->json([
-            // 'aPred' => $aPred,
-            // 'Z' => $z,
-            'nilai z' => $zT,
-            'status' => $ket,
-            'keterangan' => $st,
-            // 'fuzzy Temp' => $nTemp,
-            // 'fuzzy pH' => $nPH,
-            // 'fuzzy Turb'=> $nTurbidity,
+        // return response()->json([
+        //     // 'aPred' => $aPred,
+        //     // 'Z' => $z,
+        //     'nilai z' => number_format($zT, 2),
+        //     'status' => $status,
+        //     'keterangan' => $ket,
+        //     'fuzzy Temp' => $nTemp,
+        //     'fuzzy pH' => $nPH,
+        //     'fuzzy Turb'=> $nTurbidity,
+        // ]);
+
+        $this->monitoring()->create([
+            'temperature'=> $temperature,
+            'ph'         => $ph,
+            'turbidity'  => $turbidity,
+            'status'     => $status,
+            'information'=> $ket,
         ]);
 
-        // $this->monitoring()->create([
-        //     'temperature'=> $temperature,
-        //     'ph'         => $ph,
-        //     'turbidity'  => $turbidity,
-        //     'status'     => 'coba'
-        // ]);
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil disimpan'
+        ]);
+        
+    }
 
-        // return response()->json([
-        //     'status' => true,
-        //     'message' => 'Data berhasil disimpan'
-        // ]);
+    public function create(Request $req){
+        $this->monitoring()->create([
+            'temperature'=> $req->temperature,
+            'ph'         => $req->ph,
+            'turbidity'  => $req->turbidity,
+            'status'     => $req->status,
+            'information'=> $req->information,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil disimpan'
+        ]);
     }
 
     public function showData(){

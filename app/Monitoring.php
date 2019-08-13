@@ -13,6 +13,7 @@ class Monitoring extends Model
         'ph',
         'turbidity',
         'status',
+        'information',
         // 'created_at'
     ];
 

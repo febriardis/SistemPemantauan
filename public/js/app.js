@@ -1808,6 +1808,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'app',
@@ -2017,6 +2039,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2152,7 +2175,7 @@ __webpack_require__.r(__webpack_exports__);
     postData: function postData() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/create', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/createManual', {
         temperature: this.temperature,
         ph: this.ph,
         turbidity: this.turbidity
@@ -41045,12 +41068,54 @@ var render = function() {
     "v-app",
     [
       _c(
-        "v-toolbar",
-        { attrs: { fixed: "", dark: "", color: "light-blue darken-1" } },
+        "div",
         [
-          _c("v-toolbar-side-icon", { staticClass: "hidden-md-and-up" }),
-          _vm._v(" "),
-          _c("v-toolbar-title", [_vm._v("Aplikasi Pemantauan")])
+          _c(
+            "v-toolbar",
+            [
+              _c("v-toolbar-title", [_vm._v("Title")]),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c(
+                "v-toolbar-items",
+                [
+                  _c("v-btn", { attrs: { text: "" } }, [_vm._v("Link 1")]),
+                  _vm._v(" "),
+                  _c("v-btn", { attrs: { text: "" } }, [_vm._v("Link 2")]),
+                  _vm._v(" "),
+                  _c("v-btn", { attrs: { text: "" } }, [_vm._v("Link 3")])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _vm.$vuetify.breakpoint.smAndUp
+                ? [
+                    _c(
+                      "v-btn",
+                      { attrs: { icon: "" } },
+                      [_c("v-icon", [_vm._v("mdi-export-variant")])],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      { attrs: { icon: "" } },
+                      [_c("v-icon", [_vm._v("mdi-delete-circle")])],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      { attrs: { icon: "" } },
+                      [_c("v-icon", [_vm._v("mdi-plus-circle")])],
+                      1
+                    )
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
         ],
         1
       ),
@@ -41370,8 +41435,13 @@ var render = function() {
                     },
                     [
                       _c("h6", { staticClass: "title" }, [
-                        _c("b", [_vm._v("Keterangan:")]),
+                        _c("b", [_vm._v("Status:")]),
                         _vm._v(" " + _vm._s(_vm.data.status))
+                      ]),
+                      _vm._v(" "),
+                      _c("h6", { staticClass: "title" }, [
+                        _c("b", [_vm._v("Keterangan:")]),
+                        _vm._v(" " + _vm._s(_vm.data.information))
                       ])
                     ]
                   )
@@ -82469,7 +82539,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_2___default.a);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_axios__WEBPACK_IMPORTED_MODULE_4___default.a, axios__WEBPACK_IMPORTED_MODULE_3___default.a);
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_5__["default"]);
-axios__WEBPACK_IMPORTED_MODULE_3___default.a.defaults.baseURL = 'http://sip.billionairecoach.co.id/api';
+axios__WEBPACK_IMPORTED_MODULE_3___default.a.defaults.baseURL = 'http://localhost:8000/api';
 axios__WEBPACK_IMPORTED_MODULE_3___default.a.defaults.headers = {
   'Content-Type': 'application/json',
   'X-Requested-With': 'XMLHttpRequest'

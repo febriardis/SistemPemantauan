@@ -23,7 +23,7 @@ Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 Vue.use(VueSweetalert2);
 
-axios.defaults.baseURL = 'http://sip.billionairecoach.co.id/api';
+axios.defaults.baseURL = 'http://localhost:8000/api';
 axios.defaults.headers = {  
     'Content-Type': 'application/json', 
     'X-Requested-With': 'XMLHttpRequest'

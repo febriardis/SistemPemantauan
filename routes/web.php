@@ -11,6 +11,4 @@
 |
 */
 
-Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
-
-// Route::get('cek', )
+// Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');

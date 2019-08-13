@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/createManual', 'MonitoringController@createManual');
 Route::post('/create', 'MonitoringController@create');
 Route::get('/show/latest', 'MonitoringController@showData');
 Route::get('/show/all', 'MonitoringController@showAll');

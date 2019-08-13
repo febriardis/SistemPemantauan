@@ -35,7 +35,8 @@
                         </tbody>
                     </table>
                     <v-card style="margin:10px 30px 20px 0px; padding:10px 20px">
-                        <h6 class="title"><b>Keterangan:</b>&nbsp;{{data.status}}</h6>
+                        <h6 class="title"><b>Status:</b>&nbsp;{{data.status}}</h6>
+                        <h6 class="title"><b>Keterangan:</b>&nbsp;{{data.information}}</h6>
                     </v-card>
                 </v-flex>
                 <v-flex md6 sm12 xs12>

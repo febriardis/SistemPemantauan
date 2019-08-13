@@ -35,7 +35,7 @@ export default {
     },
     methods:{
         postData(){
-            axios.post('/create', {
+            axios.post('/createManual', {
                 temperature: this.temperature,
                 ph: this.ph,
                 turbidity: this.turbidity

@@ -17,10 +17,10 @@ class CreateTbMonitoringData extends Migration
             $table->bigIncrements('id');
             $table->float('temperature');
             $table->float('ph');
-            $table->integer('turbidity');
-            $table->string('status');
+            $table->float('turbidity');
+            $table->text('status');
+            $table->text('information');
             $table->timestamp('created_at');
-            // $table->DateTime('created_at');
         });
     }
 
