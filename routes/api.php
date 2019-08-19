@@ -21,4 +21,6 @@ Route::post('/createManual', 'MonitoringController@createManual');
 Route::post('/create', 'MonitoringController@create');
 Route::get('/show/latest', 'MonitoringController@showData');
 Route::get('/show/all', 'MonitoringController@showAll');
-Route::get('/show/month', 'MonitoringController@showCurrentData');
+Route::get('/show/temperature', 'MonitoringController@showCurrentTemperature');
+Route::get('/show/ph', 'MonitoringController@showCurrentPH');
+Route::get('/show/turbidity', 'MonitoringController@showCurrentTurbidity');

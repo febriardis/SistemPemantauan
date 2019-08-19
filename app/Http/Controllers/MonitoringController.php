@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Monitoring;
+use Carbon\Carbon;
 
 class MonitoringController extends Controller
 {
@@ -272,12 +273,40 @@ class MonitoringController extends Controller
         ]);
     }
 
-    public function showCurrentData(){
-        // $data = $this->monitoring()->where('created_at')->all();
-        // return response()->json([
-        //     'status' => true,
-        //     'data' => $data    
-        // ]);
+    public function showCurrentTemperature(){
+        $data = $this->monitoring()->select('temperature', 'created_at')
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->orderBy('created_at','asc')
+                    ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
+    }
+
+    public function showCurrentPH(){
+        $data = $this->monitoring()->select('ph', 'created_at')
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->orderBy('created_at','asc')
+                    ->get();
+                    
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
+    }
+
+    public function showCurrentTurbidity(){
+        $data = $this->monitoring()->select('turbidity', 'created_at')
+                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->orderBy('created_at','asc')
+                    ->get();
+                    
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
     }
 
     public function showAll(){
