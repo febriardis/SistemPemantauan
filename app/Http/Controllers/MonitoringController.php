@@ -275,10 +275,9 @@ class MonitoringController extends Controller
 
     public function showCurrentTemperature(){
         $data = $this->monitoring()->select('temperature', 'created_at')
-                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->whereDate('created_at',  Carbon::today())
                     ->orderBy('created_at','asc')
                     ->get();
-
         return response()->json([
             'status' => true,
             'data' => $data
@@ -287,10 +286,9 @@ class MonitoringController extends Controller
 
     public function showCurrentPH(){
         $data = $this->monitoring()->select('ph', 'created_at')
-                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->whereDate('created_at',  Carbon::today())
                     ->orderBy('created_at','asc')
                     ->get();
-                    
         return response()->json([
             'status' => true,
             'data' => $data
@@ -299,10 +297,9 @@ class MonitoringController extends Controller
 
     public function showCurrentTurbidity(){
         $data = $this->monitoring()->select('turbidity', 'created_at')
-                    ->whereMonth('created_at', Carbon::now()->month)
+                    ->whereDate('created_at',  Carbon::today())
                     ->orderBy('created_at','asc')
                     ->get();
-                    
         return response()->json([
             'status' => true,
             'data' => $data
@@ -310,7 +307,9 @@ class MonitoringController extends Controller
     }
 
     public function showAll(){
-        $data = $this->monitoring()->orderBy('created_at','desc')->get();
+        $data = $this->monitoring()
+                    ->orderBy('created_at', 'desc')
+                    ->get();
         return response()->json([
             'status' => true,
             'data' => $data    
