@@ -224,29 +224,29 @@ class MonitoringController extends Controller
             $status = "air tidak layak !!";
         }
 
-        return response()->json([
-            'aPred' => $aPred,
-            'z' => $z,
-            'nilai z' => number_format($zT, 2),
-            'status' => $status,
-            'keterangan' => $ket,
-            'fuzzy Temp' => $nTemp,
-            'fuzzy pH' => $nPH,
-            'fuzzy Turb'=> $nTurbidity,
+        // return response()->json([
+        //     'aPred' => $aPred,
+        //     'z' => $z,
+        //     'nilai z' => number_format($zT, 2),
+        //     'status' => $status,
+        //     'keterangan' => $ket,
+        //     'fuzzy Temp' => $nTemp,
+        //     'fuzzy pH' => $nPH,
+        //     'fuzzy Turb'=> $nTurbidity,
+        // ]);
+
+        $this->monitoring()->create([
+            'temperature'=> $temperature,
+            'ph'         => $ph,
+            'turbidity'  => $turbidity,
+            'status'     => $status,
+            'information'=> $ket,
         ]);
 
-        // $this->monitoring()->create([
-        //     'temperature'=> $temperature,
-        //     'ph'         => $ph,
-        //     'turbidity'  => $turbidity,
-        //     'status'     => $status,
-        //     'information'=> $ket,
-        // ]);
-
-        // return response()->json([
-        //     'status' => true,
-        //     'message' => 'Data berhasil disimpan'
-        // ]);
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil disimpan'
+        ]);
         
     }
 
