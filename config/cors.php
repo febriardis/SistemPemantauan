@@ -19,12 +19,12 @@ return [
     // 'exposedHeaders' => [],
     // 'maxAge' => 0,
 
-    'supportsCredentials' => false,
-    'allowedOrigins' => ['*'],
-    'allowedOriginsPatterns' => [],
-    'allowedHeaders' => ['*'],
-    'allowedMethods' => ['*'],
-    'exposedHeaders' => [],
-    'maxAge' => 0,
+    // 'supportsCredentials' => false,
+    // 'allowedOrigins' => ['*'],
+    // 'allowedOriginsPatterns' => [],
+    // 'allowedHeaders' => ['*'],
+    // 'allowedMethods' => ['*'],
+    // 'exposedHeaders' => [],
+    // 'maxAge' => 0,
 
 ];
