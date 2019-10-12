@@ -20,7 +20,8 @@ return [
     // 'maxAge' => 0,
    
     'supportsCredentials' => false,
-    'allowedOrigins' => ['http://localhost:8080', 'https://sip.billionairecoach.co.id'],
+    // 'allowedOrigins' => ['http://localhost:8080', 'https://sip.billionairecoach.co.id'],
+    'allowedOrigins' => ['*'],
     'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
