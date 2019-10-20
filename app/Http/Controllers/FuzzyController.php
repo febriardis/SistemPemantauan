@@ -124,58 +124,58 @@ class MonitoringController extends Controller
     //inferensi dengan implikasi MIN
         //[R1]
         $aPred1 = min($nTemp[0], $nPH[0], $nTurbidity[0]); //tidak layak
-        $z1 = 50 + (50*$aPred1); //tidak layak
+        $z1 = 1 + (50*$aPred1); //tidak layak
         //[R2]
         $aPred2 = min($nTemp[0], $nPH[1], $nTurbidity[0]); //tidak layak
-        $z2 = 50 + (50*$aPred2); //tidak layak
+        $z2 = 1 + (50*$aPred2); //tidak layak
         //[R3]
         $aPred3 = min($nTemp[0], $nPH[2], $nTurbidity[0]); //tidak layak
-        $z3 = 50 + (50*$aPred3); //tidak layak
+        $z3 = 1 + (50*$aPred3); //tidak layak
         //[R4]
         $aPred4 = min($nTemp[0], $nPH[0], $nTurbidity[1]); //tidak layak
-        $z4 = 50 + (50*$aPred4); //tidak layak
+        $z4 = 1 + (50*$aPred4); //tidak layak
         //[R5]
         $aPred5 = min($nTemp[0], $nPH[1], $nTurbidity[1]); //tidak layak
-        $z5 = 50 + (50*$aPred5); //tidak layak
+        $z5 = 1 + (50*$aPred5); //tidak layak
         //[R6]
         $aPred6 = min($nTemp[0], $nPH[2], $nTurbidity[1]); //tidak layak
-        $z6 = 50 + (50*$aPred6); //tidak layak
+        $z6 = 1 + (50*$aPred6); //tidak layak
         //[R7]
         $aPred7 = min($nTemp[1], $nPH[0], $nTurbidity[0]); //tidak layak
-        $z7 = 50 + (50*$aPred7); //tidak layak
+        $z7 = 1 + (50*$aPred7); //tidak layak
         //[R8]
         $aPred8 = min($nTemp[1], $nPH[1], $nTurbidity[0]); //layak
         $z8 = 50 - (49*$aPred8); //layak
         //[R9]
         $aPred9 = min($nTemp[1], $nPH[2], $nTurbidity[0]); //tidak layak
-        $z9 = 50 + (50*$aPred9); //tidak layak
+        $z9 = 1 + (50*$aPred9); //tidak layak
         //[R10]
         $aPred10 = min($nTemp[1], $nPH[0], $nTurbidity[1]); //tidak layak
-        $z10 = 50 + (50*$aPred10); //tidak layak
+        $z10 = 1 + (50*$aPred10); //tidak layak
         //[R11]
         $aPred11 = min($nTemp[1], $nPH[1], $nTurbidity[1]); //tidak layak
-        $z11 = 50 + (50*$aPred11); //tidak layak
+        $z11 = 1 + (50*$aPred11); //tidak layak
         //[R12]
         $aPred12 = min($nTemp[1], $nPH[2], $nTurbidity[1]); //tidak layak
-        $z12 = 50 + (50*$aPred12); //tidak layak
+        $z12 = 1 + (50*$aPred12); //tidak layak
         //[R13]
         $aPred13 = min($nTemp[2], $nPH[0], $nTurbidity[0]); //tidak layak
-        $z13 = 50 + (50*$aPred13); //tidak layak
+        $z13 = 1 + (50*$aPred13); //tidak layak
         //[R14]
         $aPred14 = min($nTemp[2], $nPH[1], $nTurbidity[0]); //tidak layak
-        $z14 = 50 + (50*$aPred14); //tidak layak
+        $z14 = 1 + (50*$aPred14); //tidak layak
         //[R15]
         $aPred15 = min($nTemp[2], $nPH[2], $nTurbidity[0]); //tidak layak
-        $z15 = 50 + (50*$aPred15); //tidak layak
+        $z15 = 1 + (50*$aPred15); //tidak layak
         //[R16]
         $aPred16 = min($nTemp[2], $nPH[0], $nTurbidity[1]); //tidak layak
-        $z16 = 50 + (50*$aPred16); //tidak layak
+        $z16 = 1 + (50*$aPred16); //tidak layak
         //[R17]
         $aPred17 = min($nTemp[2], $nPH[1], $nTurbidity[1]); //tidak layak
-        $z17 = 50 + (50*$aPred17); //tidak layak
+        $z17 = 1 + (50*$aPred17); //tidak layak
         //[R18]
         $aPred18 = min($nTemp[2], $nPH[2], $nTurbidity[1]); //tidak layak
-        $z18 = 50 + (50*$aPred18); //tidak layak
+        $z18 = 1 + (50*$aPred18); //tidak layak
         
         //defuzifikasi / menghitung rata-rata
         $atas  = ($aPred1*$z1)+($aPred2*$z2)+($aPred3*$z3)+($aPred4*$z4)+($aPred5*$z5)+($aPred6*$z6)+($aPred7*$z7)+($aPred8*$z8)+($aPred9*$z9)+($aPred10*$z10)+($aPred11*$z11)+($aPred12*$z12)+($aPred13*$z13)+($aPred14*$z14)+($aPred15*$z15)+($aPred16*$z16)+($aPred17*$z17)+($aPred18*$z18);
@@ -244,64 +244,77 @@ class MonitoringController extends Controller
             $ket   = "suhu, ph, dan kekeruhan tinggi";  
         }
 
-        //output response
         return response()->json([
-            'atas' => number_format($atas,2),
-            'bawah'=> number_format($bawah,2),
-            'rata-rata Z ' => number_format($rZ,2),
+            'nilai z' => number_format($rZ, 2),
+            'status' => $status,
+            'keterangan' => $ket,
             'fuzzy Temp' => $nTemp,
             'fuzzy pH' => $nPH,
             'fuzzy Turb'=> $nTurbidity,
-            'aPred'     => [
-                'aPred1'  => number_format($aPred1,2),
-                'aPred2'  => number_format($aPred2,2),
-                'aPred3'  => number_format($aPred3,2),
-                'aPred4'  => number_format($aPred4,2),
-                'aPred5'  => number_format($aPred5,2),
-                'aPred6'  => number_format($aPred6,2),
-                'aPred7'  => number_format($aPred7,2),
-                'aPred8'  => number_format($aPred8,2),
-                'aPred9'  => number_format($aPred9,2),
-                'aPred10' => number_format($aPred10,2),
-                'aPred11' => number_format($aPred11,2),
-                'aPred12' => number_format($aPred12,2),
-                'aPred13' => number_format($aPred13,2),
-                'aPred14' => number_format($aPred14,2),
-                'aPred15' => number_format($aPred15,2),
-                'aPred16' => number_format($aPred16,2),
-                'aPred17' => number_format($aPred17,2),
-                'aPred18' => number_format($aPred18,2),
-            ],
-            'z'  => [
-                'z1 ' => number_format($z1,2),
-                'z2 ' => number_format($z2,2),
-                'z3 ' => number_format($z3,2),
-                'z4 ' => number_format($z4,2),
-                'z5 ' => number_format($z5,2),
-                'z6 ' => number_format($z6,2),
-                'z7 ' => number_format($z7,2),
-                'z8 ' => number_format($z8,2),
-                'z9 ' => number_format($z9,2),
-                'z10' => number_format($z10,2),
-                'z11' => number_format($z11,2),
-                'z12' => number_format($z12,2),
-                'z13' => number_format($z13,2),
-                'z14' => number_format($z14,2),
-                'z15' => number_format($z15,2),
-                'z16' => number_format($z16,2),
-                'z17' => number_format($z17,2),
-                'z18' => number_format($z18,2),
-            ],
         ]);
 
+        // $this->monitoring()->create([
+        //     'temperature'=> $temperature,
+        //     'ph'         => $ph,
+        //     'turbidity'  => $turbidity,
+        //     'status'     => $status,
+        //     'information'=> $ket,
+        // ]);
+
         // return response()->json([
-        //     'nilai z' => number_format($rZ, 2),
-        //     'status' => $status,
-        //     'keterangan' => $ket,
+        //     'status' => true,
+        //     'message' => 'Data berhasil disimpan'
+        // ]);
+
+        // return response()->json([
+        //     'atas' => number_format($atas,2),
+        //     'bawah'=> number_format($bawah,2),
+        //     'rata-rata Z ' => number_format($rZ,2),
         //     'fuzzy Temp' => $nTemp,
         //     'fuzzy pH' => $nPH,
         //     'fuzzy Turb'=> $nTurbidity,
+        //     'aPred'     => [
+        //         'aPred1'  => number_format($aPred1,2),
+        //         'aPred2'  => number_format($aPred2,2),
+        //         'aPred3'  => number_format($aPred3,2),
+        //         'aPred4'  => number_format($aPred4,2),
+        //         'aPred5'  => number_format($aPred5,2),
+        //         'aPred6'  => number_format($aPred6,2),
+        //         'aPred7'  => number_format($aPred7,2),
+        //         'aPred8'  => number_format($aPred8,2),
+        //         'aPred9'  => number_format($aPred9,2),
+        //         'aPred10' => number_format($aPred10,2),
+        //         'aPred11' => number_format($aPred11,2),
+        //         'aPred12' => number_format($aPred12,2),
+        //         'aPred13' => number_format($aPred13,2),
+        //         'aPred14' => number_format($aPred14,2),
+        //         'aPred15' => number_format($aPred15,2),
+        //         'aPred16' => number_format($aPred16,2),
+        //         'aPred17' => number_format($aPred17,2),
+        //         'aPred18' => number_format($aPred18,2),
+        //     ],
+        //     'z'  => [
+        //         'z1 ' => number_format($z1,2),
+        //         'z2 ' => number_format($z2,2),
+        //         'z3 ' => number_format($z3,2),
+        //         'z4 ' => number_format($z4,2),
+        //         'z5 ' => number_format($z5,2),
+        //         'z6 ' => number_format($z6,2),
+        //         'z7 ' => number_format($z7,2),
+        //         'z8 ' => number_format($z8,2),
+        //         'z9 ' => number_format($z9,2),
+        //         'z10' => number_format($z10,2),
+        //         'z11' => number_format($z11,2),
+        //         'z12' => number_format($z12,2),
+        //         'z13' => number_format($z13,2),
+        //         'z14' => number_format($z14,2),
+        //         'z15' => number_format($z15,2),
+        //         'z16' => number_format($z16,2),
+        //         'z17' => number_format($z17,2),
+        //         'z18' => number_format($z18,2),
+        //     ],
         // ]);
+        
     }
 
     public function create(Request $req){
