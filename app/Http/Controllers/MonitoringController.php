@@ -332,6 +332,7 @@ class MonitoringController extends Controller
                     ->whereDate('created_at',  Carbon::today())
                     ->orderBy('created_at','asc')
                     ->get();
+        dd($data);
         return response()->json([
             'status' => true,
             'data' => $data
