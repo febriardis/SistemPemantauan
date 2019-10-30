@@ -329,10 +329,9 @@ class MonitoringController extends Controller
 
     public function showCurrentTemperature(){
         $data = $this->monitoring()->select('temperature', 'created_at')
-                    ->whereDate('created_at',  Carbon::today())
+                    ->whereDate('created_at',  \Carbon\Carbon::today('Asia/Jakarta'))
                     ->orderBy('created_at','asc')
                     ->get();
-        dd($data);
         return response()->json([
             'status' => true,
             'data' => $data
@@ -341,7 +340,7 @@ class MonitoringController extends Controller
 
     public function showCurrentPH(){
         $data = $this->monitoring()->select('ph', 'created_at')
-                    ->whereDate('created_at',  Carbon::today())
+                    ->whereDate('created_at',  \Carbon\Carbon::today('Asia/Jakarta'))
                     ->orderBy('created_at','asc')
                     ->get();
         return response()->json([
@@ -352,7 +351,7 @@ class MonitoringController extends Controller
 
     public function showCurrentTurbidity(){
         $data = $this->monitoring()->select('turbidity', 'created_at')
-                    ->whereDate('created_at',  Carbon::today())
+                    ->whereDate('created_at',  \Carbon\Carbon::today('Asia/Jakarta'))
                     ->orderBy('created_at','asc')
                     ->get();
         return response()->json([
